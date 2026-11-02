@@ -15,3 +15,5 @@ left join {{ source('chinook', 'mediatype') }} m on t.MediaTypeId = m.MediaTypeI
 left join {{ source('chinook', 'genre') }} g on t.GenreId = g.GenreId
 left join {{ source('chinook', 'album') }} al  on al.AlbumId = t.AlbumId
 left join {{ source('chinook', 'artist') }} a on a.ArtistId = al.ArtistId
+
+
