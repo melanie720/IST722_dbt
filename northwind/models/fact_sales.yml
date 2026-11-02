@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: fact_sales
+    description: Transaction fact table. One row per product item ordered (order line item). Grain is order + product. Used to track sales by customer, employee, product and supplier (via dim_product outrigger).
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - orderid
+            - productkey
+    columns:
+      - name: orderid
+        description: Degenerate dimension of the order, used for drill through. Composite PK with productkey.
+        tests:
+            - not_null
+      - name: productkey
+        description: Dimension key for dim_product. Composite PK with orderid.
+        tests:
+            - not_null
+      - name: customerkey
+        description: Dimension key for dim_customer
+        tests:
+            - not_null
+      - name: employeekey
+        description: Dimension key for dim_employee
+        tests:
+            - not_null
+      - name: orderdatekey
+        description: role play Order Date Dimension key for dim_date
+        tests:
+            - not_null
+      - name: quantity
+        description: additive fact for the number of units of the product ordered
+        tests:
+            - not_null
+      - name: extendedpriceamount
+        description: additive fact for quantity * unit price, before discount
+        tests:
+            - not_null
+      - name: discountamount
+        description: additive fact for the dollar amount of discount on the line, quantity * unit price * discount
+        tests:
+            - not_null
+      - name: soldamount
+        description: additive fact for extended price less discount, quantity * unit price * (1 - discount)
+        tests:
+            - not_null

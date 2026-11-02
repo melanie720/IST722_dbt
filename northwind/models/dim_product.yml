@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: Product Dimension. One row per product. Category attributes are consolidated into the product (category > product hierarchy). Snowflaked - dim_supplier is an outrigger dimension referenced by supplierkey.
+    columns:
+      - name: productkey
+        description: The surrogate key of the product (dimension key)
+        tests:
+          - not_null
+          - unique
+      - name: productid
+        data_type: int
+        description: The primary key of the source system (business key)
+        tests:
+          - not_null
+          - unique
+      - name: productname
+        data_type: varchar
+        description: The name of the product
+        tests:
+          - not_null
+      - name: supplierkey
+        description: FK to outrigger dimension dim_supplier.supplierkey
+      - name: categoryname
+        data_type: varchar
+        description: The name of the product's category
+      - name: categorydescription
+        data_type: varchar
+        description: The description of the product's category
+      - name: reorderlevel
+        data_type: int
+        description: Units-in-stock level at which the product should be reordered (current value; not tracked historically)
