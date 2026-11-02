@@ -1,43 +1,161 @@
 version: 2
 
 models:
-  - name: customers
+  - name: dim_date
+    description: One row per calendar day for 2 years; various date parts.
+    columns:
+      - name: datekey
+        description: Dimension key; the calendar date; format 'yyyyMMdd'
+        data_tests:
+          - unique
+          - not_null
+      - name: fulldate
+        description: Formatted date, like '2026-01-01'
+        data_tests:
+          - unique
+          - not_null
+      - name: year
+        description: Calendar year
+        data_tests:
+          - not_null
+      - name: quarter
+        description: Calendar quarter (1-4)
+        data_tests:
+          - not_null
+      - name: month
+        description: Month number (1-12)
+        data_tests:
+          - not_null
+      - name: monthname
+        description: Month name
+        data_tests:
+          - not_null
+      - name: dayofmonth
+        description: Day of the month
+        data_tests:
+          - not_null
+      - name: dayofweek
+        description: Day of the week (1 = Monday)
+        data_tests:
+          - not_null
+      - name: dayname
+        description: Day name
+        data_tests:
+          - not_null
+  - name: dim_customer
     description: One record per customer
     columns:
-      - name: customer_id
-        description: Primary key
+      - name: customerkey
+        description: Dimension key
         data_tests:
           - unique
           - not_null
-      - name: first_order_date
-        description: NULL when a customer has not yet placed an order.
-
-  - name: stg_customers
-    description: This model cleans up customer data
+      - name: customerid
+        description: Primary key of source system table.
+        data_tests:
+          - unique
+          - not_null
+      - name: firstname
+        description: Customer's first name
+        data_tests:
+          - not_null
+      - name: lastname
+        description: Customer's last name
+        data_tests:
+          - not_null
+      - name: email
+        description: Customer's email address
+        data_tests:
+          - unique
+          - not_null
+  - name: dim_playlist
+    description: One record per playlist
     columns:
-      - name: customer_id
-        description: Primary key
+      - name: playlistkey
+        description: Dimension key
         data_tests:
           - unique
           - not_null
-
-  - name: stg_orders
-    description: This model cleans up order data
+      - name: playlistid
+        description: Primary key of source system table.
+        data_tests:
+          - unique
+          - not_null
+      - name: playlistname
+        description: Name of playlist
+        data_tests:
+          - not_null
+  - name: dim_track
+    description: One record per playlist
     columns:
-      - name: order_id
-        description: Primary key
+      - name: trackkey
+        description: Dimension key
         data_tests:
           - unique
           - not_null
-      - name: status
+      - name: trackid
+        description: Primary key of source system table.
         data_tests:
-          - accepted_values:
-              arguments: # available in v1.10.5 and higher. Older versions can set the <argument_name> as the top-level property.
-                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
-      - name: customer_id
+          - unique
+          - not_null
+      - name: trackname
+        description: Name of track
         data_tests:
           - not_null
-          - relationships:
-              arguments:
-                to: ref('stg_customers')
-                field: customer_id
+      - name: mediatype
+        description: Type of media
+        data_tests:
+          - not_null
+      - name: genre
+        description: Genre of the track
+        data_tests:
+          - not_null
+      - name: lengthms
+        description: Length of track in milliseconds
+        data_tests:
+          - not_null
+      - name: sizebytes
+        description: Size in bytes
+        data_tests:
+          - not_null
+      - name: unitprice
+        description: Price of the track
+        data_tests:
+          - not_null
+  - name: stg_playlisttrack
+    description: Bridge table; One record per track in a playlist
+    columns:
+      - name: playlistid
+        description: The playlist
+        data_tests:
+          - not_null
+      - name: trackid
+        description: The track
+        data_tests:
+          - not_null
+    data_tests:
+      - unique:
+          description: playlistid and trackid must be a unique combination
+          column_name: "(playlistid || '-' || trackid)" 
+  - name: stg_trackreviews
+    description: One record per customer review of a track
+    columns:
+      - name: customerid
+        description: Customer reviewing the track
+        data_tests:
+          - not_null
+      - name: trackid
+        description: Track being reviewed
+        data_tests:
+          - not_null
+      - name: sentiment
+        description: Like or dislike
+        data_tests:
+          - not_null
+  - name: fact_track_catalog
+    description: Periodic Snapshot; One row per track the company has on record; Captured on each update.
+  - name: fact_playlist
+    description: Factless; One row per track in a playlist.
+  - name: fact_track_review
+    description: Transaction; One row per customer review of a track
+

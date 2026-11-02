@@ -1,10 +1,30 @@
 sources:
-    - name: jaffle_shop
-      description: This is a replica of the Postgres database used by our app
-      database: raw
-      schema: jaffle_shop
+    - name: chinook
+      description: This is a replica of the Chinook SQL Server database.
+      database: chinook # The name of my database in Snowflake
+      schema: public # The schema my tables are under
       tables:
-          - name: customers
+          - name: album
+            description: One record per album.
+          - name: artist
+            description: One record per artist.
+          - name: customer
             description: One record per customer.
-          - name: orders
-            description: One record per order. Includes cancelled and deleted orders.
+          - name: employee
+            description: One record per employee.
+          - name: genre
+            description: Genre lookup table.
+          - name: invoice
+            description: One record per invoice.
+          - name: invoiceline
+            description: One record per item sold on an invoice.
+          - name: mediatype
+            description: Media type lookup table.
+          - name: playlist
+            description: One record per playlist.
+          - name: playlisttrack
+            description: One record per track in a playlist.
+          - name: track
+            description: One record per track.
+          - name: trackreviews
+            description: One record per customer review of a track.
