@@ -1,8 +1,8 @@
 with date_sequence as (
 
     select
-        dateadd(day, row_number() over (order by seq4()) - 1, date '2026-01-01') as full_date
-    from table(generator(rowcount => 731)) -- 2 years; Extra day in case there is a leap year.
+        dateadd(day, row_number() over (order by seq4()) - 1, date '2009-01-01') as full_date
+    from table(generator(rowcount => 6939)) -- 2009-01-01 through 2027-12-31 inclusive (19 years, 4 leap days: 2012, 2016, 2020, 2024)
 
 )
 
@@ -19,4 +19,3 @@ select
         1, 'Monday', 2, 'Tuesday', 3, 'Wednesday', 4, 'Thursday',
         5, 'Friday', 6, 'Saturday', 7, 'Sunday') as dayname
 from date_sequence
-

@@ -68,6 +68,32 @@ models:
         data_tests:
           - unique
           - not_null
+  - name: dim_employee
+    description: One record per employee
+    columns:
+      - name: employeekey
+        description: Dimension key
+        data_tests:
+          - unique
+          - not_null
+      - name: employeeid
+        description: Primary key of source system table.
+        data_tests:
+          - unique
+          - not_null
+      - name: firstname
+        description: Employee's first name
+        data_tests:
+          - not_null
+      - name: lastname
+        description: Employee's last name
+        data_tests:
+          - not_null
+      - name: email
+        description: Employee's email address
+        data_tests:
+          - unique
+          - not_null
   - name: dim_playlist
     description: One record per playlist
     columns:
